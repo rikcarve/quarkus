@@ -1,0 +1,9 @@
+FROM armhf/openjdk:8-jre-alpine
+
+RUN mkdir /deployments
+
+ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+COPY maven/lib/* /deployments/lib/
+COPY maven/*-runner.jar /deployments/app.jar
+CMD java $JAVA_OPTS -jar /deployments/quarkus-runner.jar

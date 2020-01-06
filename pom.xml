@@ -11,7 +11,8 @@
         <surefire-plugin.version>2.22.1</surefire-plugin.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
-        <quarkus.version>0.25.0</quarkus.version>
+        <quarkus.version>1.1.0.Final</quarkus.version>
+        <docker.maven.plugin.version>0.31.0</docker.maven.plugin.version>
         <!-- <project.build.sourceEncoding>windows-1251</project.build.sourceEncoding> -->
     </properties>
     <dependencyManagement>
@@ -47,6 +48,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>quarkus</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -69,6 +71,60 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker.maven.plugin.version}</version>
+                <configuration>
+                    <dockerHost>${my.docker.host}</dockerHost>
+                    <certPath>${my.docker.certs}</certPath>
+                    <images>
+                        <image>
+                            <name>${project.artifactId}</name>
+                            <build>
+                                <dockerFile>Dockerfile.jvm</dockerFile>
+                                <from>jboss/wildfly:latest</from>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+                                <labels>
+                                </labels>
+                                <assembly>
+                                    <inline>
+                                        <files>
+                                            <file>
+                                                <source>target/${project.build.finalName}-runner.jar</source>
+                                                <outputDirectory>/</outputDirectory>
+                                            </file>
+                                        </files>
+                                        <fileSet>
+                                            <directory>target/lib</directory>
+                                            <outputDirectory>/lib</outputDirectory>
+                                        </fileSet>
+                                    </inline>
+                                </assembly>
+
+                            </build>
+                            <run>
+                                <ports>
+                                    <port>8080:8080</port>
+                                </ports>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>docker:build</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
     <profiles>
