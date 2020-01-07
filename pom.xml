@@ -13,6 +13,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <quarkus.version>1.1.0.Final</quarkus.version>
         <docker.maven.plugin.version>0.31.0</docker.maven.plugin.version>
+        <docker.file>Dockerfile.jvm</docker.file>
         <!-- <project.build.sourceEncoding>windows-1251</project.build.sourceEncoding> -->
     </properties>
     <dependencyManagement>
@@ -34,6 +35,10 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-jwt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-health</artifactId>
         </dependency>
 
         <dependency>
@@ -79,11 +84,12 @@
                 <configuration>
                     <dockerHost>${my.docker.host}</dockerHost>
                     <certPath>${my.docker.certs}</certPath>
+                    <registry>192.168.91.81:5000</registry>
                     <images>
                         <image>
-                            <name>${project.artifactId}</name>
+                            <name>${project.build.finalName}</name>
                             <build>
-                                <dockerFile>Dockerfile.jvm</dockerFile>
+                                <dockerFile>${docker.file}</dockerFile>
                                 <from>jboss/wildfly:latest</from>
                                 <ports>
                                     <port>8080</port>
@@ -129,47 +135,12 @@
     </build>
     <profiles>
         <profile>
-            <id>native</id>
-            <activation>
-                <property>
-                    <name>native</name>
-                </property>
-            </activation>
+            <id>armv7</id>
+            <properties>
+                <docker.file>Dockerfile.armv7</docker.file>
+            </properties>
             <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.quarkus</groupId>
-                        <artifactId>quarkus-maven-plugin</artifactId>
-                        <version>${quarkus.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>native-image</goal>
-                                </goals>
-                                <configuration>
-                                    <enableHttpUrlHandler>true</enableHttpUrlHandler>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>${surefire-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                                <configuration>
-                                    <systemProperties>
-                                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
-                                    </systemProperties>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
+                <finalName>quarkus-armv7</finalName>
             </build>
         </profile>
     </profiles>
