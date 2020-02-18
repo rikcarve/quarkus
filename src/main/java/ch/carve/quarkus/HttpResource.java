@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/hello")
+@Path("/env")
 public class HttpResource {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpResource.class);
@@ -31,13 +31,13 @@ public class HttpResource {
     @Produces(MediaType.APPLICATION_XML)
     public String hello(String body) {
         logger.info(body);
-        return "hello";
+        return "hello from " + System.getenv("HOSTNAME");
     }
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return "Anybody out there???";
+        return "hello from " + System.getenv("HOSTNAME");
     }
 
 }

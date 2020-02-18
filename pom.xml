@@ -11,7 +11,8 @@
         <surefire-plugin.version>2.22.1</surefire-plugin.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
-        <quarkus.version>1.1.0.Final</quarkus.version>
+        <quarkus.version>1.2.0.Final</quarkus.version>
+        <fabric8.maven.plugin.version>4.3.1</fabric8.maven.plugin.version>
         <docker.maven.plugin.version>0.31.0</docker.maven.plugin.version>
         <docker.file>Dockerfile.jvm</docker.file>
         <!-- <project.build.sourceEncoding>windows-1251</project.build.sourceEncoding> -->
@@ -39,6 +40,17 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-health</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-qute</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -79,8 +91,8 @@
 
             <plugin>
                 <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>${docker.maven.plugin.version}</version>
+                <artifactId>fabric8-maven-plugin</artifactId>
+                <version>${fabric8.maven.plugin.version}</version>
                 <configuration>
                     <dockerHost>${my.docker.host}</dockerHost>
                     <certPath>${my.docker.certs}</certPath>
@@ -90,7 +102,9 @@
                             <name>${project.build.finalName}</name>
                             <build>
                                 <dockerFile>${docker.file}</dockerFile>
-                                <from>jboss/wildfly:latest</from>
+                                <tags>
+                                    <tag>${version}</tag>
+                                </tags>
                                 <ports>
                                     <port>8080</port>
                                 </ports>
@@ -119,12 +133,28 @@
                             </run>
                         </image>
                     </images>
+                    <resources>
+                        <services>
+                            <service>
+                                <name>${project.artifactId}</name>
+                                <type>NodePort</type>
+                                <ports>
+                                    <port>
+                                        <port>8080</port>
+                                        <targetPort>8080</targetPort>
+                                        <nodePort>9080</nodePort>
+                                    </port>
+                                </ports>
+                            </service>
+                        </services>
+                    </resources>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>docker:build</id>
+                        <id>fabric8:build</id>
                         <phase>install</phase>
                         <goals>
+                            <goal>resource</goal>
                             <goal>build</goal>
                         </goals>
                     </execution>
