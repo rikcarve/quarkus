@@ -2,17 +2,13 @@ package ch.carve.quarkus.qute;
 
 import java.math.BigDecimal;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NonNull;
 
-@Getter
-@Setter
+@Data
 public class Item {
-    String name;
+    @NonNull
     BigDecimal price;
-
-    public Item(BigDecimal bigDecimal, String string) {
-        this.name = string;
-        this.price = bigDecimal;
-    }
+    @NonNull
+    String name;
 }
