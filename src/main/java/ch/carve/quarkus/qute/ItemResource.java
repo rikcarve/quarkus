@@ -11,7 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import io.quarkus.qute.Template;
-import io.quarkus.qute.TemplateExtension;
 import io.quarkus.qute.TemplateInstance;
 
 @Path("items")
@@ -23,15 +22,11 @@ public class ItemResource {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public TemplateInstance get() {
-        List<Item> data = new ArrayList<>();
-        data.add(new Item(new BigDecimal(10), "Apple"));
-        data.add(new Item(new BigDecimal(16), "Pear"));
-        data.add(new Item(new BigDecimal(30), "Orange"));
+        List<Temperature> data = new ArrayList<>();
+        data.add(new Temperature("Schlazimmer", new BigDecimal(20), new BigDecimal(43)));
+        data.add(new Temperature("Keller", new BigDecimal(16), new BigDecimal(60)));
+        data.add(new Temperature("Wohnzimmer", new BigDecimal(22), new BigDecimal(46)));
         return items.data("items", data);
     }
 
-    @TemplateExtension
-    static BigDecimal discountedPrice(Item item) {
-        return item.price.multiply(new BigDecimal("0.9"));
-    }
 }
