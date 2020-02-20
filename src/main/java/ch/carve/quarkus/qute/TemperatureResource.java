@@ -13,11 +13,11 @@ import javax.ws.rs.core.MediaType;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 
-@Path("items")
-public class ItemResource {
+@Path("temperature")
+public class TemperatureResource {
 
     @Inject
-    Template items;
+    Template temperatures;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -26,7 +26,8 @@ public class ItemResource {
         data.add(new Temperature("Schlazimmer", new BigDecimal(20), new BigDecimal(43)));
         data.add(new Temperature("Keller", new BigDecimal(16), new BigDecimal(60)));
         data.add(new Temperature("Wohnzimmer", new BigDecimal(22), new BigDecimal(46)));
-        return items.data("items", data);
+        return temperatures.data("temperatures", data)
+                .data("active", "Temperature");
     }
 
 }

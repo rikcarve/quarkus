@@ -25,7 +25,8 @@ public class LightResource {
         List<Light> data = new ArrayList<>();
         data.add(new Light("Esszimmer", Switch.ON));
         data.add(new Light("Wohnzimmer", Switch.OFF));
-        return light.data("light", data);
+        return light.data("light", data)
+                .data("active", "Light");
     }
 
 }
