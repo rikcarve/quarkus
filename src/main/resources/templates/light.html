@@ -14,7 +14,11 @@
 		{#for item in light}
 		<tr>
 			<td>{item.name}</td>
-			<td>{item.status}</td>
+			<td class="fit">
+                <form action="/light/{item.name}/toggle" method="POST" name="toggle-{item.name}" up-target=".container">
+                    <input class="btn btn-dark btn-sm" value="{item.status}" type="submit">
+                </form>
+            </td>
 		</tr>
 		{/for}
 		</tbody>
