@@ -96,10 +96,10 @@
                 <configuration>
                     <dockerHost>${my.docker.host}</dockerHost>
                     <certPath>${my.docker.certs}</certPath>
-                    <registry>192.168.91.81:5000</registry>
+                    <!-- <registry>192.168.91.21:15000</registry>  -->
                     <images>
                         <image>
-                            <name>${project.build.finalName}</name>
+                            <name>rikcarve/${project.build.finalName}</name>
                             <build>
                                 <dockerFile>${docker.file}</dockerFile>
                                 <tags>
