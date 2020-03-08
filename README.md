@@ -1,5 +1,5 @@
 # quarkus
-Quarkus playground
+Quarkus and Qute playground
 
 ### Keycloak
 
